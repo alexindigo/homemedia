@@ -1,0 +1,9 @@
+[Unit]
+Description=ABCDE Rip
+
+[Service]
+ExecStart=/usr/local/bin/cd_rip.sh
+ExecStopPost=/usr/bin/eject
+
+[Install]
+WantedBy=multi-user.target

@@ -87,22 +87,16 @@ http://<PI IPADDRESS>:8384/
 
 Setup abcde service
 
-```
-$ sudo vi /lib/systemd/system/abcde.service
-```
-
-Add
+Copy [cd_rip.sh](cd_rip.sh) to `/usr/local/bin/cd_rip.sh`
 
 ```
-[Unit]
-Description=ABCDE Rip
+$ sudo cp cd_rip.sh /usr/local/bin/
+```
 
-[Service]
-ExecStart=/usr/bin/abcde
-#ExecStopPost=/usr/bin/eject
+Copy [abcde.service](abcde.service) to `/lib/systemd/system/abcde.service`
 
-[Install]
-WantedBy=multi-user.target
+```
+$ sudo cp abcde.service /lib/systemd/system/abcde.service
 ```
 
 Enable service
