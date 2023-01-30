@@ -99,7 +99,7 @@ Description=ABCDE Rip
 
 [Service]
 ExecStart=/usr/bin/abcde
-ExecStopPost=/usr/bin/eject
+#ExecStopPost=/usr/bin/eject
 
 [Install]
 WantedBy=multi-user.target
@@ -120,11 +120,7 @@ Create udev rule to start `abcde` when CD is inserted
 $ sudo vi /etc/udev/rules.d/99-cd-ripping.rules
 ```
 
-Add
-
-```
-SUBSYSTEM=="block", KERNEL=="sr0", ACTION=="change", ENV{SYSTEMD_WANTS}+="abcde.service"
-```
+File: [99-cd-ripping.rules](99-cd-ripping.rules)
 
 Reload udev rules
 

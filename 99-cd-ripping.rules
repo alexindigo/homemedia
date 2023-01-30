@@ -1,0 +1,2 @@
+# SUBSYSTEM=="block", KERNEL=="sr0", ENV{ID_CDROM_MEDIA_CD}=="1", ACTION=="change", ENV{SYSTEMD_WANTS}+="abcde.service"
+SUBSYSTEM=="block", KERNEL=="sr0", ENV{ID_CDROM_MEDIA_CD}=="1", ACTION=="change", RUN+="/usr/bin/systemctl restart abcde.service"
