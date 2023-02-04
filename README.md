@@ -124,8 +124,88 @@ $ sudo udevadm control --reload-rules && sudo udevadm trigger
 
 # Apple Superdrive (Optional)
 
+Add `/etc/udev/rules.d/90-mac-superdrive.rules`
 
+```
+# Initialise Apple SuperDrive
+ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="/usr/bin/sg_raw %r/sr%n EA 00 00 00 00 00 01"
+```
 
 # Prior art
 
 - [aac/raspberrypi-cd-ripper](https://github.com/aac/raspberrypi-cd-ripper)
+
+# Raspberry PI | Auto DVD Ripping
+
+## Get MakeMKV
+
+From: https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224
+
+```
+$ wget https://www.makemkv.com/download/makemkv-oss-1.17.3.tar.gz
+$ wget https://www.makemkv.com/download/makemkv-bin-1.17.3.tar.gz
+```
+
+## Build MakeMKV
+
+Build tools
+
+```
+$ sudo apt install build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
+```
+
+"source" package:
+
+```
+$ cd makemkv-oss-1.17.3
+$ ./configure
+$ make
+$ sudo make install
+```
+
+"makemkv-bin" package:
+
+```
+$ cd ../makemkv-bin-1.17.3
+$ make
+$ sudo make install
+```
+
+## Add `libavcodec` (`ffmpeg`) to the mix
+
+```
+$ wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+$ $ tar -xvjf ffmpeg-snapshot.tar.bz2
+$ cd ffmpeg
+$ ./configure --prefix=/tmp/ffmpeg --enable-static --disable-shared --enable-pic
+$ make install
+```
+
+configure and build makemkv-oss:
+
+```
+$ cd ../makemkv-oss-1.17.3
+$ PKG_CONFIG_PATH=/tmp/ffmpeg/lib/pkgconfig ./configure
+$ make
+$ sudo make install
+```
+
+clean up ffmpeg temp files:
+
+```
+rm -rf /tmp/ffmpeg
+```
+
+## Run
+
+```
+$ makemkvcon list
+```
+
+# Prior art
+
+- [jlesage/docker-makemkv](https://github.com/jlesage/docker-makemkv/blob/master/Dockerfile)
+- [automatic-ripping-machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine)
+- [RPi + MakeMKV](https://forum.makemkv.com/forum/viewtopic.php?t=29688)
+
+
