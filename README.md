@@ -251,8 +251,8 @@ $ docker run -d \
 -e USER_ID=`id -u` \
 -e GROUP_ID=`id -g` \
 -e UMASK=000 \
--e AUTOMATED_CONVERSION_PRESET=Rip\mkv_h264_1080p_subs \
--e AUTOMATED_CONVERSION_FORMAT=mkv \
+-e AUTOMATED_CONVERSION_PRESET=Rip\Default \
+-e AUTOMATED_CONVERSION_FORMAT=mp4 \
 jlesage/handbrake
 ```
 
