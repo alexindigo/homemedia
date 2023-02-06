@@ -142,8 +142,8 @@ ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb"
 From: https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224
 
 ```
-$ wget https://www.makemkv.com/download/makemkv-oss-1.17.3.tar.gz
-$ wget https://www.makemkv.com/download/makemkv-bin-1.17.3.tar.gz
+$ wget https://www.makemkv.com/download/makemkv-oss-1.17.1.tar.gz
+$ wget https://www.makemkv.com/download/makemkv-bin-1.17.1.tar.gz
 ```
 
 ## Build MakeMKV
@@ -207,5 +207,63 @@ $ makemkvcon list
 - [jlesage/docker-makemkv](https://github.com/jlesage/docker-makemkv/blob/master/Dockerfile)
 - [automatic-ripping-machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine)
 - [RPi + MakeMKV](https://forum.makemkv.com/forum/viewtopic.php?t=29688)
+- [udev rules](https://github.com/Robpol86/makemkv)
+- [no gui](https://forums.freebsd.org/threads/install-and-use-makemkv-without-gui-on-freebsd.70614/)
+
+
+## Temp / Alternative
+
+NAS
+
+### makemkv
+
+```
+$ sudo chmod go+rw /dev/sg5
+$ docker run -d \
+--name=makemkv \
+-p 5800:5800 \
+-v /volume1/docker/makemkv/config:/config \
+-v /volume1/docker/makemkv/storage:/storage \
+-v /volume1/Downloads/_Rips:/output \
+--device /dev/sg5 \
+-e TZ=America/Los_Angeles \
+-e USER_ID=`id -u` \
+-e GROUP_ID=`id -g` \
+-e UMASK=000 \
+-e AUTO_DISC_RIPPER=1 \
+-e AUTO_DISC_RIPPER_MIN_TITLE_LENGTH=300 \
+jlesage/makemkv
+```
+
+PS. Check if `/output` folder inside container has write permissions.
+
+### handbrake
+
+```
+$ docker run -d \
+--name=handbrake \
+-p 5900:5800 \
+-v /volume1/docker/handbrake/config:/config \
+-v /volume1/docker/handbrake/storage:/storage \
+-v /volume1/Downloads/_Rips:/input \
+-v /volume1/Downloads/_Movies:/output \
+-e TZ=America/Los_Angeles \
+-e USER_ID=`id -u` \
+-e GROUP_ID=`id -g` \
+-e UMASK=000 \
+-e AUTOMATED_CONVERSION_PRESET=Rip\mkv_h264_1080p_subs \
+-e AUTOMATED_CONVERSION_FORMAT=mkv \
+jlesage/handbrake
+```
+
+PS. Check if `/output` folder inside container has write permissions.
+
+#### Passthru subtitles
+
+> To pass-thru, every found subtitle, create a custom MKV preset with the video and audio settings required and give it a name. Click the Subtitles tab then Selection Behavior. Set Track Selection Behavior dropdown to All Matching Selected Languages. Move (Any) from the left-hand Available Languages column so it appears on its own in the right-hand Selected Languages column.
+Ensure Add Closed Captions and Add Foreign scan boxes are both unticked.
+Set Burn-in behavior to None
+Click Apply to close the window. Right-click the preset name you created and click Update Selected Preset to store your new subtitle default. Load an MKV to check.
+
 
 
